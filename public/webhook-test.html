@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webhook Testing Tool</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    h1, h2, h3 {
+      color: #2c3e50;
+    }
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .panel {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      flex: 1;
+      min-width: 300px;
+    }
+    textarea, input, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 4px;
+      border: 1px solid #ddd;
+      box-sizing: border-box;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    pre {
+      background-color: #f8f8f8;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 10px;
+      overflow: auto;
+      max-height: 400px;
+    }
+    .status {
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 4px;
+    }
+    .success {
+      background-color: #dff0d8;
+      color: #3c763d;
+    }
+    .error {
+      background-color: #f2dede;
+      color: #a94442;
+    }
+    .tabs {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 10px 20px;
+      background-color: #eee;
+      cursor: pointer;
+      border-radius: 4px 4px 0 0;
+      margin-right: 5px;
+    }
+    .tab.active {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-bottom: none;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .warning {
+      background-color: #fcf8e3;
+      border-left: 4px solid #f0ad4e;
+      padding: 10px 15px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Webhook Testing Tool</h1>
+  
+  <div class="warning">
+    <h3>Important Note</h3>
+    <p>This tool uses the following webhook URL: <code>https://n8n.automatedsolarbiz.com/webhook-test/4f843117-88a0-42d1-9016-d35be4727716</code></p>
+    <p>Make sure this webhook is active in your n8n instance.</p>
+  </div>
+  
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('direct')">Direct Test</div>
+    <div class="tab" onclick="showTab('api')">API Route Test</div>
+    <div class="tab" onclick="showTab('form')">Form Simulation</div>
+    <div class="tab" onclick="showTab('debug')">Debug</div>
+  </div>
+  
+  <div class="container">
+    <!-- Direct Webhook Test -->
+    <div id="direct" class="tab-content active panel">
+      <h2>Test Direct Webhook Connection</h2>
+      <p>This will send data directly to the n8n webhook URL.</p>
+      
+      <textarea id="directData" rows="10" placeholder="Enter JSON data to send">{
+  "name": "Test User",
+  "email": "test@example.com",
+  "phone": "555-123-4567",
+  "source": "webhook_test_tool",
+  "timestamp": "2023-05-12T12:00:00Z"
+}</textarea>
+      
+      <button onclick="testDirectWebhook()">Send Direct Test</button>
+      
+      <h3>Response:</h3>
+      <div id="directStatus" class="status"></div>
+      <pre id="directResponse"></pre>
+    </div>
+    
+    <!-- API Route Test -->
+    <div id="api" class="tab-content panel">
+      <h2>Test API Route</h2>
+      <p>This will send data to your Next.js API route, which will then forward it to n8n.</p>
+      
+      <select id="apiEndpoint">
+        <option value="/api/submit-lead">Submit Lead (/api/submit-lead)</option>
+        <option value="/api/webhook">Generic Webhook (/api/webhook)</option>
+        <option value="/api/direct-webhook">Direct Webhook (/api/direct-webhook)</option>
+      </select>
+      
+      <textarea id="apiData" rows="10" placeholder="Enter JSON data to send">{
+  "firstName": "Test",
+  "name": "Test User",
+  "email": "test@example.com",
+  "phone": "555-123-4567",
+  "source": "api_test_tool",
+  "timestamp": "2023-05-12T12:00:00Z"
+}</textarea>
+      
+      <button onclick="testApiRoute()">Test API Route</button>
+      
+      <h3>Response:</h3>
+      <div id="apiStatus" class="status"></div>
+      <pre id="apiResponse"></pre>
+    </div>
+    
+    <!-- Form Simulation -->
+    <div id="form" class="tab-content panel">
+      <h2>Simulate Form Submission</h2>
+      <p>This will simulate a user filling out and submitting a form.</p>
+      
+      <div>
+        <label for="formFirstName">First Name:</label>
+        <input type="text" id="formFirstName" value="Test User">
+      </div>
+      
+      <div>
+        <label for="formEmail">Email:</label>
+        <input type="email" id="formEmail" value="test@example.com">
+      </div>
+      
+      <div>
+        <label for="formPhone">Phone:</label>
+        <input type="tel" id="formPhone" value="555-123-4567">
+      </div>
+      
+      <div>
+        <label for="formSource">Source:</label>
+        <input type="text" id="formSource" value="form_simulation">
+      </div>
+      
+      <button onclick="simulateForm()">Simulate Form Submission</button>
+      
+      <h3>Response:</h3>
+      <div id="formStatus" class="status"></div>
+      <pre id="formResponse"></pre>
+    </div>
+    
+    <!-- Debug Tab -->
+    <div id="debug" class="tab-content panel">
+      <h2>Debug Information</h2>
+      <p>Use this section to check webhook configuration and troubleshoot issues.</p>
+      
+      <h3>Webhook URLs</h3>
+      <pre>Correct URL: https://n8n.automatedsolarbiz.com/webhook-test/4f843117-88a0-42d1-9016-d35be4727716
+Old URL (DO NOT USE): https://n8n.automatedsolarbiz.com/webhook/b8862371-7217-4f8c-ab21-b06e9f098dcb</pre>
+      
+      <h3>API Routes</h3>
+      <ul>
+        <li><strong>/api/submit-lead</strong> - Used by forms to submit lead data</li>
+        <li><strong>/api/webhook</strong> - Generic webhook endpoint</li>
+        <li><strong>/api/direct-webhook</strong> - Alternative direct webhook endpoint</li>
+      </ul>
+      
+      <h3>Check Webhook Status</h3>
+      <button onclick="checkWebhookStatus()">Check Webhook Status</button>
+      <div id="webhookStatus" class="status"></div>
+      <pre id="webhookStatusResponse"></pre>
+    </div>
+  </div>
+  
+  <script>
+    // Constants
+    const CORRECT_WEBHOOK_URL = "https://n8n.automatedsolarbiz.com/webhook-test/4f843117-88a0-42d1-9016-d35be4727716";
+    
+    // Tab functionality
+    function showTab(tabId) {
+      // Hide all tab contents
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      // Deactivate all tabs
+      document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Show the selected tab content
+      document.getElementById(tabId).classList.add('active');
+      
+      // Activate the clicked tab
+      Array.from(document.querySelectorAll('.tab')).find(tab => 
+        tab.textContent.toLowerCase().includes(tabId)
+      ).classList.add('active');
+    }
+    
+    // Add cache busting to all fetch requests
+    function fetchWithCacheBusting(url, options = {}) {
+      const cacheBuster = new Date().getTime();
+      const separator = url.includes('?') ? '&' : '?';
+      const urlWithCacheBuster = `${url}${separator}t=${cacheBuster}`;
+      
+      // Add cache control headers
+      const headers = {
+        ...options.headers,
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+      };
+      
+      return fetch(urlWithCacheBuster, {
+        ...options,
+        headers,
+        cache: 'no-store'
+      });
+    }
+    
+    // Test direct webhook connection
+    async function testDirectWebhook() {
+      const statusElement = document.getElementById('directStatus');
+      const responseElement = document.getElementById('directResponse');
+      
+      try {
+        // Get the data from the textarea
+        const data = JSON.parse(document.getElementById('directData').value);
+        
+        // Add timestamp if not present
+        if (!data.timestamp) {
+          data.timestamp = new Date().toISOString();
+        }
+        
+        // Display sending message
+        statusElement.className = 'status';
+        statusElement.textContent = 'Sending request...';
+        
+        // Send the request
+        const response = await fetchWithCacheBusting(CORRECT_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'User-Agent': 'Webhook-Test-Tool'
+          },
+          body: JSON.stringify(data)
+        });
+        
+        // Get the response
+        const responseText = await response.text();
+        
+        // Display the response
+        if (response.ok) {
+          statusElement.className = 'status success';
+          statusElement.textContent = `Success! Status: ${response.status}`;
+        } else {
+          statusElement.className = 'status error';
+          statusElement.textContent = `Error! Status: ${response.status}`;
+        }
+        
+        responseElement.textContent = responseText;
+      } catch (error) {
+        // Display any errors
+        statusElement.className = 'status error';
+        statusElement.textContent = `Error: ${error.message}`;
+        responseElement.textContent = error.stack;
+      }
+    }
+    
+    // Test API route
+    async function testApiRoute() {
+      const statusElement = document.getElementById('apiStatus');
+      const responseElement = document.getElementById('apiResponse');
+      const endpoint = document.getElementById('apiEndpoint').value;
+      
+      try {
+        // Get the data from the textarea
+        const data = JSON.parse(document.getElementById('apiData').value);
+        
+        // Add timestamp if not present
+        if (!data.timestamp) {
+          data.timestamp = new Date().toISOString();
+        }
+        
+        // Display sending message
+        statusElement.className = 'status';
+        statusElement.textContent = 'Sending request...';
+        
+        // Send the request
+        const response = await fetchWithCacheBusting(endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'User-Agent': 'Webhook-Test-Tool'
+          },
+          body: JSON.stringify(data)
+        });
+        
+        // Get the response
+        const responseData = await response.json();
+        
+        // Display the response
+        if (response.ok) {
+          statusElement.className = 'status success';
+          statusElement.textContent = `Success! Status: ${response.status}`;
+        } else {
+          statusElement.className = 'status error';
+          statusElement.textContent = `Error! Status: ${response.status}`;
+        }
+        
+        responseElement.textContent = JSON.stringify(responseData, null, 2);
+      } catch (error) {
+        // Display any errors
+        statusElement.className = 'status error';
+        statusElement.textContent = `Error: ${error.message}`;
+        responseElement.textContent = error.stack;
+      }
+    }
+    
+    // Simulate form submission
+    async function simulateForm() {
+      const statusElement = document.getElementById('formStatus');
+      const responseElement = document.getElementById('formResponse');
+      
+      try {
+        // Get the form data
+        const formData = {
+          firstName: document.getElementById('formFirstName').value,
+          email: document.getElementById('formEmail').value,
+          phone: document.getElementById('formPhone').value,
+          source: document.getElementById('formSource').value,
+          timestamp: new Date().toISOString(),
+        };
+        
+        // Display sending message
+        statusElement.className = 'status';
+        statusElement.textContent = 'Sending request...';
+        
+        // Send the request
+        const response = await fetchWithCacheBusting('/api/direct-webhook', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'User-Agent': 'Webhook-Test-Tool'
+          },
+          body: JSON.stringify(formData)
+        });
+        
+        // Get the response
+        const responseData = await response.json();
+        
+        // Display the response
+        if (response.ok) {
+          statusElement.className = 'status success';
+          statusElement.textContent = `Success! Status: ${response.status}`;
+        } else {
+          statusElement.className = 'status error';
+          statusElement.textContent = `Error! Status: ${response.status}`;
+        }
+        
+        responseElement.textContent = JSON.stringify(responseData, null, 2);
+      } catch (error) {
+        // Display any errors
+        statusElement.className = 'status error';
+        statusElement.textContent = `Error: ${error.message}`;
+        responseElement.textContent = error.stack;
+      }
+    }
+    
+    // Check webhook status
+    async function checkWebhookStatus() {
+      const statusElement = document.getElementById('webhookStatus');
+      const responseElement = document.getElementById('webhookStatusResponse');
+      
+      try {
+        // Display checking message
+        statusElement.className = 'status';
+        statusElement.textContent = 'Checking webhook status...';
+        
+        // Send a simple ping to the webhook
+        const response = await fetchWithCacheBusting(CORRECT_WEBHOOK_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'User-Agent': 'Webhook-Status-Check'
+          },
+          body: JSON.stringify({
+            type: 'status_check',
+            timestamp: new Date().toISOString()
+          })
+        });
+        
+        // Get the response
+        const responseText = await response.text();
+        
+        // Display the response
+        if (response.ok) {
+          statusElement.className = 'status success';
+          statusElement.textContent = `Webhook is active! Status: ${response.status}`;
+        } else {
+          statusElement.className = 'status error';
+          statusElement.textContent = `Webhook error! Status: ${response.status}`;
+        }
+        
+        responseElement.textContent = responseText;
+      } catch (error) {
+        // Display any errors
+        statusElement.className = 'status error';
+        statusElement.textContent = `Error checking webhook: ${error.message}`;
+        responseElement.textContent = error.stack;
+      }
+    }
+  </script>
+</body>
+</html>
