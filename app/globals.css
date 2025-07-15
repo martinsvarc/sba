@@ -310,4 +310,42 @@ body {
     image-rendering: -webkit-optimize-contrast;
     image-rendering: crisp-edges;
   }
+
+  /* Mobile-specific improvements for form layouts */
+  .form-buttons-mobile {
+    @apply flex flex-col sm:flex-row gap-4 sm:gap-0 sm:justify-between mt-6 sm:mt-8;
+  }
+
+  .form-button-mobile {
+    @apply w-full sm:w-auto px-5 py-2.5 sm:px-6 sm:py-2.5 text-base rounded-lg transition-all duration-300;
+  }
+
+  .form-selection-box-mobile {
+    @apply p-4 sm:p-5 rounded-lg border cursor-pointer transition-all hover:border-[#C7A052]/70 active:scale-[0.99];
+  }
+
+  .form-input-mobile {
+    @apply w-full h-12 px-4 text-base rounded-lg bg-[#0A0A0A] border border-[#333] focus:border-[#C7A052] focus:ring-[#C7A052] text-[#E7C078];
+  }
+
+  .form-textarea-mobile {
+    @apply w-full h-24 p-4 text-base rounded-lg bg-[#0A0A0A] border border-[#333] focus:border-[#C7A052] focus:ring-[#C7A052] text-[#E7C078] resize-none;
+  }
+
+  /* Improve text wrapping on mobile */
+  .mobile-text-wrap {
+    word-wrap: break-word;
+    word-break: break-word;
+    hyphens: auto;
+  }
+
+  /* Improve spacing on mobile */
+  .mobile-spacing {
+    @apply space-y-4 sm:space-y-5;
+  }
+
+  /* Better mobile typography */
+  .mobile-heading {
+    @apply text-lg sm:text-xl md:text-2xl font-bold text-[#C7A052] mb-4 sm:mb-6 p-3 sm:p-4 border border-[#C7A052]/30 bg-[#C7A052]/10 rounded-lg shadow-inner;
+  }
 }

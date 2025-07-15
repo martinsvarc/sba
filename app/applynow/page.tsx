@@ -34,13 +34,16 @@ const formatPhoneNumber = (value: string) => {
   // Remove all non-digit characters
   const digits = value.replace(/\D/g, "")
 
+  // Limit to 10 digits
+  const limitedDigits = digits.slice(0, 10)
+
   // Format the phone number as (XXX) XXX-XXXX
-  if (digits.length <= 3) {
-    return digits
-  } else if (digits.length <= 6) {
-    return `(${digits.slice(0, 3)}) ${digits.slice(3)}`
+  if (limitedDigits.length <= 3) {
+    return limitedDigits
+  } else if (limitedDigits.length <= 6) {
+    return `(${limitedDigits.slice(0, 3)}) ${limitedDigits.slice(3)}`
   } else {
-    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`
+    return `(${limitedDigits.slice(0, 3)}) ${limitedDigits.slice(3, 6)}-${limitedDigits.slice(6, 10)}`
   }
 }
 
@@ -1335,14 +1338,14 @@ export default function ApplyNowPage() {
 
     return (
       <div
-        className={`p-5 sm:p-6 rounded-lg border cursor-pointer transition-all hover:border-[#C7A052]/70 active:scale-[0.99] ${
+        className={`p-4 sm:p-5 md:p-6 rounded-lg border cursor-pointer transition-all hover:border-[#C7A052]/70 active:scale-[0.99] ${
           selected ? "border-[#C7A052] bg-[#C7A052]/10" : "border-[#333]"
         }`}
         onClick={handleClick}
       >
         <div className="flex items-start sm:items-center">
           <div
-            className={`min-w-[20px] h-5 w-5 rounded mr-4 flex items-center justify-center ${
+            className={`min-w-[20px] h-5 w-5 rounded mr-3 sm:mr-4 flex items-center justify-center ${
               selected ? "bg-[#C7A052] text-black" : "border border-[#555]"
             }`}
           >
@@ -1361,7 +1364,7 @@ export default function ApplyNowPage() {
               </svg>
             )}
           </div>
-          <div className="text-sm sm:text-base">{children}</div>
+          <div className="text-sm sm:text-base mobile-text-wrap">{children}</div>
         </div>
       </div>
     )
@@ -1576,7 +1579,7 @@ export default function ApplyNowPage() {
                 <div className="space-y-5 sm:space-y-6 animate-fadeIn">
                   <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#C7A052] mb-4 sm:mb-6 p-3 sm:p-4 border border-[#C7A052]/30 bg-[#C7A052]/10 rounded-lg shadow-inner animate-typewriter">
                     Why are you interested in this solar business opportunity?{" "}
-                    <span className="whitespace-nowrap">(Select all that apply)</span>
+                    (Select all that apply)
                   </h3>
 
                   <div className="space-y-3 sm:space-y-4">
@@ -1588,8 +1591,7 @@ export default function ApplyNowPage() {
                         }
                       >
                         <div className="flex items-center">
-                          <span className="mr-2">✅</span>I want to build income outside of a{" "}
-                          <span className="whitespace-nowrap">9–5</span>
+                          <span className="mr-2">✅</span>I want to build income outside of a 9–5
                         </div>
                       </SelectionBox>
                       <SelectionBox
@@ -1604,8 +1606,7 @@ export default function ApplyNowPage() {
                         }
                       >
                         <div className="flex items-center">
-                          <span className="mr-2">✅</span>I'm looking for something more stable than{" "}
-                          <span className="whitespace-nowrap">crypto/eComm/etc</span>
+                          <span className="mr-2">✅</span>I'm looking for something more stable than crypto/eComm/etc
                         </div>
                       </SelectionBox>
                       <SelectionBox
@@ -1645,8 +1646,7 @@ export default function ApplyNowPage() {
                         }
                       >
                         <div className="flex items-center">
-                          <span className="mr-2">✅</span>I'm interested in the{" "}
-                          <span className="whitespace-nowrap">long-term growth</span> of clean energy
+                          <span className="mr-2">✅</span>I'm interested in the long-term growth of clean energy
                         </div>
                       </SelectionBox>
                     </div>
@@ -1759,8 +1759,7 @@ export default function ApplyNowPage() {
                         onChange={() => handleSingleOptionChange("mainGoal", "Build a second income stream")}
                       >
                         <div className="flex items-center">
-                          <span className="mr-2">🔘</span>Build a{" "}
-                          <span className="whitespace-nowrap">second income stream</span>
+                          <span className="mr-2">🔘</span>Build a second income stream
                         </div>
                       </SelectionBox>
                       <SelectionBox
@@ -1776,8 +1775,7 @@ export default function ApplyNowPage() {
                         onChange={() => handleSingleOptionChange("mainGoal", "Replace or surpass my current income")}
                       >
                         <div className="flex items-center">
-                          <span className="mr-2">🔘</span>Replace or surpass my{" "}
-                          <span className="whitespace-nowrap">current income</span>
+                          <span className="mr-2">🔘</span>Replace or surpass my current income
                         </div>
                       </SelectionBox>
                       <SelectionBox
@@ -1785,8 +1783,7 @@ export default function ApplyNowPage() {
                         onChange={() => handleSingleOptionChange("mainGoal", "Build long-term, hands-free income")}
                       >
                         <div className="flex items-center">
-                          <span className="mr-2">🔘</span>Build{" "}
-                          <span className="whitespace-nowrap">long-term, hands-free income</span>
+                          <span className="mr-2">🔘</span>Build long-term, hands-free income
                         </div>
                       </SelectionBox>
                       <SelectionBox
@@ -1823,8 +1820,7 @@ export default function ApplyNowPage() {
               {currentStep === 5 && (
                 <div className="space-y-5 sm:space-y-6 animate-fadeIn">
                   <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#C7A052] mb-4 sm:mb-6 p-3 sm:p-4 border border-[#C7A052]/30 bg-[#C7A052]/10 rounded-lg shadow-inner animate-typewriter">
-                    Do you have <span className="whitespace-nowrap">2–3 hours per week</span> to oversee your solar
-                    business if we handle the rest?
+                    Do you have 2–3 hours per week to oversee your solar business if we handle the rest?
                   </h3>
 
                   <div className="space-y-3 sm:space-y-4">
@@ -1902,7 +1898,7 @@ export default function ApplyNowPage() {
                         onChange={() => handleSingleOptionChange("readyToMoveForward", "Within 1–2 weeks")}
                       >
                         <div className="flex items-center">
-                          <span className="mr-2">🔘</span>Within <span className="whitespace-nowrap">1–2 weeks</span>
+                          <span className="mr-2">🔘</span>Within 1–2 weeks
                         </div>
                       </SelectionBox>
                       <SelectionBox
@@ -1910,7 +1906,7 @@ export default function ApplyNowPage() {
                         onChange={() => handleSingleOptionChange("readyToMoveForward", "Within 30 days")}
                       >
                         <div className="flex items-center">
-                          <span className="mr-2">🔘</span>Within <span className="whitespace-nowrap">30 days</span>
+                          <span className="mr-2">🔘</span>Within 30 days
                         </div>
                       </SelectionBox>
                       <SelectionBox
@@ -1918,8 +1914,7 @@ export default function ApplyNowPage() {
                         onChange={() => handleSingleOptionChange("readyToMoveForward", "Just exploring — not sure yet")}
                       >
                         <div className="flex items-center">
-                          <span className="mr-2">🔘</span>Just exploring —{" "}
-                          <span className="whitespace-nowrap">not sure yet</span>
+                          <span className="mr-2">🔘</span>Just exploring — not sure yet
                         </div>
                       </SelectionBox>
                     </div>
@@ -1949,7 +1944,7 @@ export default function ApplyNowPage() {
                 <div className="space-y-5 sm:space-y-6 animate-fadeIn">
                   <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#C7A052] mb-4 sm:mb-6 p-3 sm:p-4 border border-[#C7A052]/30 bg-[#C7A052]/10 rounded-lg shadow-inner animate-typewriter">
                     We handle the heavy lifting... but where would you value additional clarity or support before moving
-                    forward? <span className="whitespace-nowrap">(Select all that apply)</span>
+                    forward? (Select all that apply)
                   </h3>
 
                   <div className="grid grid-cols-1 gap-3 sm:gap-4">
@@ -1963,8 +1958,7 @@ export default function ApplyNowPage() {
                     >
                       <div className="flex items-center">
                         <span className="mr-2">🔘</span>Understanding the{" "}
-                        <span className="whitespace-nowrap">business model</span> and{" "}
-                        <span className="whitespace-nowrap">earning potential</span>
+                        business model and earning potential
                       </div>
                     </SelectionBox>
                     <SelectionBox
@@ -1972,8 +1966,7 @@ export default function ApplyNowPage() {
                       onChange={() => handleCheckboxChange("supportNeeded", "How we generate and qualify solar leads")}
                     >
                       <div className="flex items-center">
-                        <span className="mr-2">🔘</span>How we generate and qualify{" "}
-                        <span className="whitespace-nowrap">solar leads</span>
+                        <span className="mr-2">🔘</span>How we generate and qualify solar leads
                       </div>
                     </SelectionBox>
                     <SelectionBox
@@ -1983,8 +1976,7 @@ export default function ApplyNowPage() {
                       }
                     >
                       <div className="flex items-center">
-                        <span className="mr-2">🔘</span>Legal, compliance, and{" "}
-                        <span className="whitespace-nowrap">business structure</span>
+                        <span className="mr-2">🔘</span>Legal, compliance, and business structure
                       </div>
                     </SelectionBox>
                     <SelectionBox
@@ -1994,8 +1986,7 @@ export default function ApplyNowPage() {
                       }
                     >
                       <div className="flex items-center">
-                        <span className="mr-2">🔘</span>What the{" "}
-                        <span className="whitespace-nowrap">weekly time commitment</span> looks like
+                        <span className="mr-2">🔘</span>What the weekly time commitment looks like
                       </div>
                     </SelectionBox>
                     <SelectionBox
@@ -2003,9 +1994,7 @@ export default function ApplyNowPage() {
                       onChange={() => handleCheckboxChange("supportNeeded", "Long-term scalability and exit potential")}
                     >
                       <div className="flex items-center">
-                        <span className="mr-2">🔘</span>
-                        <span className="whitespace-nowrap">Long-term scalability</span> and{" "}
-                        <span className="whitespace-nowrap">exit potential</span>
+                        <span className="mr-2">🔘</span>Long-term scalability and exit potential
                       </div>
                     </SelectionBox>
                     <SelectionBox
@@ -2013,7 +2002,7 @@ export default function ApplyNowPage() {
                       onChange={() => handleCheckboxChange("supportNeeded", "Other (specify below)")}
                     >
                       <div className="flex items-center">
-                        <span className="mr-2">🔘</span>Other <span className="whitespace-nowrap">(specify below)</span>
+                        <span className="mr-2">🔘</span>Other (specify below)
                       </div>
                     </SelectionBox>
                   </div>
@@ -2057,8 +2046,7 @@ export default function ApplyNowPage() {
               {currentStep === 8 && (
                 <div className="space-y-5 sm:space-y-6 animate-fadeIn">
                   <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#C7A052] mb-4 sm:mb-6 p-3 sm:p-4 border border-[#C7A052]/30 bg-[#C7A052]/10 rounded-lg shadow-inner animate-typewriter">
-                    If we offer you a <span className="whitespace-nowrap">private strategy call</span>, are you{" "}
-                    <span className="whitespace-nowrap">100% committed</span> to showing up on time?
+                    If we offer you a private strategy call, are you 100% committed to showing up on time?
                   </h3>
 
                   <div className="space-y-3 sm:space-y-4">
@@ -2091,8 +2079,7 @@ export default function ApplyNowPage() {
                         }
                       >
                         <div className="flex items-center">
-                          <span className="mr-2">🔘</span>Only if I feel like it's a fit after{" "}
-                          <span className="whitespace-nowrap">watching the video</span>
+                          <span className="mr-2">🔘</span>Only if I feel like it's a fit after watching the video
                         </div>
                       </SelectionBox>
                     </div>
@@ -2122,7 +2109,7 @@ export default function ApplyNowPage() {
               {currentStep === 9 && (
                 <div className="space-y-5 sm:space-y-6 animate-fadeIn">
                   <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#C7A052] mb-4 sm:mb-6 p-3 sm:p-4 border border-[#C7A052]/30 bg-[#C7A052]/10 rounded-lg shadow-inner animate-typewriter">
-                    What is your <span className="whitespace-nowrap">full name</span>?
+                    What is your full name?
                   </h3>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
@@ -2180,7 +2167,7 @@ export default function ApplyNowPage() {
               {currentStep === 10 && (
                 <div className="space-y-5 sm:space-y-6 animate-fadeIn">
                   <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#C7A052] mb-4 sm:mb-6 p-3 sm:p-4 border border-[#C7A052]/30 bg-[#C7A052]/10 rounded-lg shadow-inner animate-typewriter">
-                    What is your <span className="whitespace-nowrap">email address</span>?
+                    What is your email address?
                   </h3>
 
                   <input
@@ -2223,7 +2210,7 @@ export default function ApplyNowPage() {
               {currentStep === 11 && (
                 <div className="space-y-5 sm:space-y-6 animate-fadeIn">
                   <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-[#C7A052] mb-4 sm:mb-6 p-3 sm:p-4 border border-[#C7A052]/30 bg-[#C7A052]/10 rounded-lg shadow-inner animate-typewriter">
-                    What is your <span className="whitespace-nowrap">phone number</span>?
+                    What is your phone number?
                   </h3>
 
                   <input
